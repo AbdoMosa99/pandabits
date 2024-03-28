@@ -1,19 +1,19 @@
-import express = require('express');
 import dotenv = require('dotenv');
-import { StatusCodes } from 'http-status-codes';
-import mongoose from 'mongoose';
+
+import app from './app';
+import { dbConnect } from './utils/dbConnect';
 
 
-dotenv.config();
-mongoose.connect('mongodb://127.0.0.1:27017/pandabits');
-const app = express();
+const main = async () => {
+    // Load env variables
+    dotenv.config();
 
-app.get('/', (req, res) => {
-    res
-        .status(StatusCodes.OK)
-        .json({ message: `Hello, ${req.query.name || 'World'}!`});
-});
+    await dbConnect();
 
-app.listen(process.env.PORT, () => {
-    console.log(`Listening on port ${process.env.PORT}`);
-});
+    // Start server
+    app.listen(process.env.PORT!, () => {
+        console.info(`Listening on port ${process.env.PORT}`);
+    });
+}
+
+main();
